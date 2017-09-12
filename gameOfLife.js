@@ -61,8 +61,8 @@ $(document).ready(function() {
  			this.matrix = iniMatrixWithZeros(this.nbLines, this.nbColumns);
  			this.canvas = document.getElementById('canvasid');
  			this.context = this.canvas.getContext('2d');
- 			this.canvas.width = ($(window).width() - $('#controls').width()) * 0.95;
- 			this.canvas.height = ($(window).height() - $('#pageTitle').height()) * 0.8;
+ 			this.canvas.width = $('#divCanvas').width() * 0.9;
+ 			this.canvas.height = $('#divCanvas').width() * 0.9;
  			this.cellWidth = this.canvas.width / this.nbColumns;
  			this.cellHeight = this.canvas.height / this.nbLines;
  			this.intervalId =0;
@@ -93,7 +93,7 @@ $(document).ready(function() {
  		},
 
 		drawCell : function(i, j){
- 			(this.matrix[i][j] === 1) ? this.context.fillStyle = "lightslategray" : this.context.fillStyle = "white";
+ 			(this.matrix[i][j] === 1) ? this.context.fillStyle = "black" : this.context.fillStyle = "white";
  			this.context.fillRect(i * this.cellWidth, j * this.cellHeight, this.cellWidth, this.cellHeight);
  		},	
 
@@ -162,7 +162,7 @@ $(document).ready(function() {
 		$nbBeings = $('#nbBeings').val();
 		game.constructor($nbRows, $nbColumns, $nbBeings);
 		game.animate();
-		game.intervalId = window.setInterval(playGame, 30);
+		game.intervalId = window.setInterval(playGame, 100);
 	})
 
 	$("#stopGame").on('click', function(){
@@ -172,6 +172,13 @@ $(document).ready(function() {
 	$("#resetGame").on('click', function(){
 		clearInterval(game.intervalId);
 		initPage();
+	})
+
+	$(window).resize(function(){
+		game.canvas.width = $('#divCanvas').width() * 0.9;
+		game.canvas.height = game.canvas.width;
+		this.cellWidth = this.canvas.width / this.nbColumns;
+ 		this.cellHeight = this.canvas.height / this.nbLines;
 	})
 	
 	initPage();

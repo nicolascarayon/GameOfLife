@@ -1,16 +1,39 @@
 body
 {
 	background-color: black;
-	color : white;
+	color: white;
 }
 
+input, label
+{
+	text-align: center;
+	max-width: 200px;
+}
+
+input
+{
+	max-width: 100px;
+	margin: auto;
+}
+
+.form-group
+{
+	text-align: center;
+}
 
 #controls
 {
 	float: left;
-    width: 18%;
-    margin: 15px;   
-    text-align: left;
+    width: 150;
+    max-width: 150;
+    margin: auto;   
+    text-align: center;
+}
+
+#divCanvas
+{
+	float: left;
+	text-align: center;
 }
 
 #pageTitle
@@ -24,9 +47,7 @@ body
 	text-align: center;
 }
 
-.inputText
+#statsid
 {
-	text-align: center;
-	margin: auto;
+	text-align: left;
 }
-
