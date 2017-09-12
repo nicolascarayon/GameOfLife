@@ -1,0 +1,32 @@
+body
+{
+	background-color: black;
+	color : white;
+}
+
+
+#controls
+{
+	float: left;
+    width: 18%;
+    margin: 15px;   
+    text-align: left;
+}
+
+#pageTitle
+{
+	text-align: left;
+	margin: 30px;
+}
+
+#btnDiv
+{
+	text-align: center;
+}
+
+.inputText
+{
+	text-align: center;
+	margin: auto;
+}
+
