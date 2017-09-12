@@ -85,7 +85,7 @@ $(document).ready(function() {
  				this.context.strokeStyle="lightgray";
  				this.context.strokeRect(j * this.cellWidth, 0, j * this.cellWidth, this.canvas.height);
  			}
- 			for (var i = 0; i < this.nbColumns; i++){
+ 			for (var i = 0; i < this.nbLines; i++){
  				this.context.lineWidth = 1;
  				this.context.strokeStyle="lightgray";
  				this.context.strokeRect(0, i * this.cellHeight, this.canvas.width, i * this.cellHeight);
@@ -157,10 +157,10 @@ $(document).ready(function() {
 	}
 
 	$("#playGame").on('click', function(){
-		$nbLiness = $('#nbLines').val();
+		$nbLines = $('#nbLines').val();
 		$nbColumns = $('#nbColumns').val();
 		$nbBeings = $('#nbBeings').val();
-		game.constructor($nbRows, $nbColumns, $nbBeings);
+		game.constructor($nbLines, $nbColumns, $nbBeings);
 		game.animate();
 		game.intervalId = window.setInterval(playGame, 100);
 	})
