@@ -180,6 +180,11 @@ $(document).ready(function() {
 		this.cellWidth = this.canvas.width / this.nbColumns;
  		this.cellHeight = this.canvas.height / this.nbLines;
 	})
+
+	$('input').on('keypress', function(e){
+		if ((e.which < 48) || (e.which > 57)) e.preventDefault();
+		if ((e.currentTarget.value.length === 3) && (!(e.currentTarget.id === 'nbBeings'))) e.preventDefault();
+	})
 	
 	initPage();
 	
