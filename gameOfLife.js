@@ -35,24 +35,24 @@ $(document).ready(function() {
 		}, 
 
 		playGame: function(){
-			if (!game.timerRunning){
-				game.intervalId = window.setInterval(function(){
+			if (!this.timerRunning){
+				this.intervalId = window.setInterval(function(){
 					game.animate();
 				}, TIME_LAPSE);	
-				game.timerRunning = true;
+				this.timerRunning = true;
 			}
 		},
 
 		resetGame: function(){
-			game.pauseGame();
-			game.constructor($('#nbLines').val(), $('#nbColumns').val(), $('#nbBeings').val());	
-			game.drawCanvasUpd();
+			this.pauseGame();
+			this.constructor($('#nbLines').val(), $('#nbColumns').val(), $('#nbBeings').val());	
+			this.drawCanvasUpd();
 		},
 
 		pauseGame: function(){
-			if (game.timerRunning){
-				clearInterval(game.intervalId);
-				game.timerRunning = false;	
+			if (this.timerRunning){
+				clearInterval(this.intervalId);
+				this.timerRunning = false;	
 			}
 		},
 
