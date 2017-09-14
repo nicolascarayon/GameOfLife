@@ -14,6 +14,10 @@ var getMatrixRandom = function(matrix, nbLin, nbCol, nbOnes) {
 	for (var k = 1; k <= nbOnes; k++){
 			i = Math.floor(Math.random()*nbLin);
 			j = Math.floor(Math.random()*nbCol);
+			while (matrix[i][j]===1){
+				i = Math.floor(Math.random()*nbLin);
+				j = Math.floor(Math.random()*nbCol);
+			}
 			matrix[i][j] = 1;
 		}
 	return matrix;

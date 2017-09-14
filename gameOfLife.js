@@ -23,8 +23,8 @@ $(document).ready(function() {
  			this.canvas.height = $('#divCanvas').width() * 0.9;
  			this.cellWidth = this.canvas.width / this.nbColumns;
  			this.cellHeight = this.canvas.height / this.nbLines;
- 			this.intervalId =0;
  			this.intervalId = 0;
+ 			this.timerRunning = false;
  			this.generation = 0;
  			this.nbBeings = nbBeings;
  			this.matrix = getMatrixZeros(this.nbLines, this.nbColumns);
@@ -35,14 +35,14 @@ $(document).ready(function() {
 		}, 
 
 		resetGame : function(){
-			$nbRows = NB_COLUMNS_INI;
-			$nbColumns = NB_LINES_INI;
-			$nbBeings = NB_BEINGS_INI;
-			$('#nbLines').val($nbRows);
-			$('#nbColumns').val($nbColumns);
-			$('#nbBeings').val($nbBeings);
-			clearInterval(game.intervalId);
-			game.constructor($nbRows, $nbColumns, $nbBeings);	
+			clearInterval(game.timerRunning);
+			game.timerRunning = false;
+			game.constructor($('#nbLines').val(), $('#nbColumns').val(), $('#nbBeings').val());	
+			game.drawCanvasUpd();
+		},
+
+		pauseGame : function(){
+			
 		},
 
 		drawBordersAndGrid : function(){
@@ -67,12 +67,6 @@ $(document).ready(function() {
  			this.context.fillRect(i * this.cellWidth, j * this.cellHeight, this.cellWidth, this.cellHeight);
  		},	
 
-/*
- 		initMatrix : function(){
-			this.matrix = iniMatrixWithZeros(this.nbLines, this.nbColumns);
-			this.matrix = randomMatrix(this.matrix, this.nbLines, this.nbColumns, this.nbBeings);
-	 	},
-*/
 	 	drawCanvasUpd : function(){
 	 		this.context.fillStyle = "white";
 	 		for (var i = 0; i < this.nbColumns; i++){
@@ -103,13 +97,10 @@ $(document).ready(function() {
  			var newMat = getMatrixZeros(this.nbLines, this.nbColumns);
  			for (var i = 0; i < this.nbLines; i++){ 				
  				for (var j = 0; j < this.nbColumns; j++){
- 
   					var neighboors = getNeighboorsNumber(this.matrix, i, j, this.nbLines, this.nbColumns);
-
  					if ((this.matrix[i][j] === 0) && (neighboors === 3)) newMat[i][j] = 1;
  					if ((this.matrix[i][j] === 1) && ((neighboors === 2) || (neighboors === 3))) newMat[i][j] = 1;
-
- 				}
+				}
  			}
  			this.matrix = newMat.slice();
  			this.generation++;
@@ -123,18 +114,17 @@ $(document).ready(function() {
 	};
 
 	$("#playGame").on('click', function(){
-		$nbLines = $('#nbLines').val();
-		$nbColumns = $('#nbColumns').val();
-		$nbBeings = $('#nbBeings').val();
-		game.constructor($nbLines, $nbColumns, $nbBeings);
-		game.animate();
-		game.intervalId = window.setInterval(function(){
-			game.animate();
-		}, TIME_LAPSE);
+		if (!game.timerRunning){
+			game.intervalId = window.setInterval(function(){
+				game.animate();
+			}, TIME_LAPSE);	
+		game.timerRunning = true;
+		}
 	})
 
-	$("#stopGame").on('click', function(){
+	$("#pauseGame").on('click', function(){
 		clearInterval(game.intervalId);
+		game.timerRunning = false;
 	})
 
 	$("#resetGame").on('click', function(){
@@ -158,11 +148,9 @@ $(document).ready(function() {
 
 	$('#nbBeings').on('blur', function(e){
 		$(e.target).val(Math.min($('#nbLines').val() * $('#nbColumns').val(), $(e.target).val() ) )  ;
+		
 	})
 	
 	initPage();
-	
-	
-	
 
 });
