@@ -34,15 +34,26 @@ $(document).ready(function() {
  			this.matrix = getMatrixRandom(this.matrix, nbLines, nbColumns, nbBeings);
 		}, 
 
+		playGame : function(){
+			if (!game.timerRunning){
+				game.intervalId = window.setInterval(function(){
+					game.animate();
+				}, TIME_LAPSE);	
+				game.timerRunning = true;
+			}
+		},
+
 		resetGame : function(){
-			clearInterval(game.timerRunning);
-			game.timerRunning = false;
+			game.pauseGame();
 			game.constructor($('#nbLines').val(), $('#nbColumns').val(), $('#nbBeings').val());	
 			game.drawCanvasUpd();
 		},
 
 		pauseGame : function(){
-			
+			if (game.timerRunning){
+				clearInterval(game.intervalId);
+				game.timerRunning = false;	
+			}
 		},
 
 		drawBordersAndGrid : function(){
@@ -114,17 +125,11 @@ $(document).ready(function() {
 	};
 
 	$("#playGame").on('click', function(){
-		if (!game.timerRunning){
-			game.intervalId = window.setInterval(function(){
-				game.animate();
-			}, TIME_LAPSE);	
-		game.timerRunning = true;
-		}
+		game.playGame();
 	})
 
 	$("#pauseGame").on('click', function(){
-		clearInterval(game.intervalId);
-		game.timerRunning = false;
+		game.pauseGame();
 	})
 
 	$("#resetGame").on('click', function(){
