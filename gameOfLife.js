@@ -1,64 +1,22 @@
 $(document).ready(function() {
-	
+
+	const NB_LINES_INI = 100;
+	const NB_COLUMNS_INI = 100;
+	const NB_BEINGS_INI = 4000;
+	const TIME_LAPSE = 100;
+
 	var initPage = function(){
-		$nbRows = 200;
-		$nbColumns = 200;
-		$nbBeings = 15000;
-		$('#nbLines').val($nbRows);
-		$('#nbColumns').val($nbColumns);
-		$('#nbBeings').val($nbBeings);
-		game.constructor($nbRows, $nbColumns, $nbBeings);	
-	}
-
-	var iniMatrixWithZeros = function(nbLin, nbCol){
-		// init matrix with zeros
-		var matrix = [];
-		for(var i = 0; i < nbLin; i++) {
-		    matrix[i] = [];
-		    for(var j = 0; j < nbCol; j++) {
-		        matrix[i][j] = 0;
-		    }
-		};
-		return matrix;
-	}
-
-	var randomMatrix = function(matrix, nbLin, nbCol, nbOnes) {
-		for (var k = 1; k <= nbOnes; k++){
- 			i = Math.floor(Math.random()*nbLin);
- 			j = Math.floor(Math.random()*nbCol);
- 			matrix[i][j] = 1;
- 		}
- 		return matrix;
-	}
-
-	var getNeighboorsNumber = function(matrix, i, j, nbRows, nbCols){
-		// number of neighboors
-		nb = 0;
-		(i === 0) ? i_before = nbRows-1 : i_before = i-1;
-		(i === nbRows-1) ? i_after = 0 : i_after = i+1;
-		(j === 0) ? j_before = nbCols-1 : j_before = j-1;
-		(j === nbCols-1) ? j_after = 0 : j_after = j+1;
-		
-		if (matrix[i_before][j_before] === 1) nb++;
-		if (matrix[i_before][j] === 1) nb++;
-		if (matrix[i_before][j_after] === 1) nb++;
-
-		if (matrix[i][j_before] === 1) nb++;
-		if (matrix[i][j_after] === 1) nb++;
-
-		if (matrix[i_after][j-1] === 1) nb++;
-		if (matrix[i_after][j] === 1) nb++; 
-		if (matrix[i_after][j_after] === 1) nb++;
-		
-		return nb;
-	}
+		$('#nbLines').val(NB_LINES_INI);
+		$('#nbColumns').val(NB_COLUMNS_INI);
+		$('#nbBeings').val(NB_BEINGS_INI);
+		game.constructor($('#nbLines').val(), $('#nbColumns').val(), $('#nbBeings').val());
+	};
 
 	var game = {
 
 		constructor(nbLines, nbColumns, nbBeings) {
  			this.nbColumns = nbColumns;
  			this.nbLines = nbLines;
- 			this.matrix = iniMatrixWithZeros(this.nbLines, this.nbColumns);
  			this.canvas = document.getElementById('canvasid');
  			this.context = this.canvas.getContext('2d');
  			this.canvas.width = $('#divCanvas').width() * 0.9;
@@ -66,14 +24,26 @@ $(document).ready(function() {
  			this.cellWidth = this.canvas.width / this.nbColumns;
  			this.cellHeight = this.canvas.height / this.nbLines;
  			this.intervalId =0;
- 			this.initMatrix();
  			this.intervalId = 0;
  			this.generation = 0;
  			this.nbBeings = nbBeings;
+ 			this.matrix = getMatrixZeros(this.nbLines, this.nbColumns);
  			this.drawBordersAndGrid();
  			this.drawCanvasUpd();
  			this.updStats();
+ 			this.matrix = getMatrixRandom(this.matrix, nbLines, nbColumns, nbBeings);
 		}, 
+
+		resetGame : function(){
+			$nbRows = NB_COLUMNS_INI;
+			$nbColumns = NB_LINES_INI;
+			$nbBeings = NB_BEINGS_INI;
+			$('#nbLines').val($nbRows);
+			$('#nbColumns').val($nbColumns);
+			$('#nbBeings').val($nbBeings);
+			clearInterval(game.intervalId);
+			game.constructor($nbRows, $nbColumns, $nbBeings);	
+		},
 
 		drawBordersAndGrid : function(){
 			this.context.fillStyle = "white";
@@ -97,11 +67,12 @@ $(document).ready(function() {
  			this.context.fillRect(i * this.cellWidth, j * this.cellHeight, this.cellWidth, this.cellHeight);
  		},	
 
+/*
  		initMatrix : function(){
 			this.matrix = iniMatrixWithZeros(this.nbLines, this.nbColumns);
 			this.matrix = randomMatrix(this.matrix, this.nbLines, this.nbColumns, this.nbBeings);
 	 	},
-
+*/
 	 	drawCanvasUpd : function(){
 	 		this.context.fillStyle = "white";
 	 		for (var i = 0; i < this.nbColumns; i++){
@@ -129,7 +100,7 @@ $(document).ready(function() {
  		},
 
  		getMatrixNext : function(){
- 			var newMat = iniMatrixWithZeros(this.nbLines, this.nbColumns);
+ 			var newMat = getMatrixZeros(this.nbLines, this.nbColumns);
  			for (var i = 0; i < this.nbLines; i++){ 				
  				for (var j = 0; j < this.nbColumns; j++){
  
@@ -151,18 +122,15 @@ $(document).ready(function() {
  		}
 	};
 
-
-	var playGame = function(){
-		game.animate();
-	}
-
 	$("#playGame").on('click', function(){
 		$nbLines = $('#nbLines').val();
 		$nbColumns = $('#nbColumns').val();
 		$nbBeings = $('#nbBeings').val();
 		game.constructor($nbLines, $nbColumns, $nbBeings);
 		game.animate();
-		game.intervalId = window.setInterval(playGame, 100);
+		game.intervalId = window.setInterval(function(){
+			game.animate();
+		}, TIME_LAPSE);
 	})
 
 	$("#stopGame").on('click', function(){
@@ -170,8 +138,7 @@ $(document).ready(function() {
 	})
 
 	$("#resetGame").on('click', function(){
-		clearInterval(game.intervalId);
-		initPage();
+		game.resetGame();
 	})
 
 	$(window).resize(function(){
@@ -183,7 +150,14 @@ $(document).ready(function() {
 
 	$('input').on('keypress', function(e){
 		if ((e.which < 48) || (e.which > 57)) e.preventDefault();
-		if ((e.currentTarget.value.length === 3) && (!(e.currentTarget.id === 'nbBeings'))) e.preventDefault();
+	})
+
+	$('#nbLines, #nbColumns').on('blur', function(e){
+		if ($(e.target).val() >= 300) $(e.target).val(300);
+	})
+
+	$('#nbBeings').on('blur', function(e){
+		$(e.target).val(Math.min($('#nbLines').val() * $('#nbColumns').val(), $(e.target).val() ) )  ;
 	})
 	
 	initPage();
