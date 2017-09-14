@@ -20,7 +20,7 @@ $(document).ready(function() {
  			this.canvas = document.getElementById('canvasid');
  			this.context = this.canvas.getContext('2d');
  			this.canvas.width = $('#divCanvas').width() * 0.9;
- 			this.canvas.height = $('#divCanvas').width() * 0.9;
+ 			this.canvas.height = $(window).height() * 0.80;
  			this.cellWidth = this.canvas.width / this.nbColumns;
  			this.cellHeight = this.canvas.height / this.nbLines;
  			this.intervalId = 0;
@@ -34,7 +34,7 @@ $(document).ready(function() {
  			this.matrix = getMatrixRandom(this.matrix, nbLines, nbColumns, nbBeings);
 		}, 
 
-		playGame : function(){
+		playGame: function(){
 			if (!game.timerRunning){
 				game.intervalId = window.setInterval(function(){
 					game.animate();
@@ -43,20 +43,20 @@ $(document).ready(function() {
 			}
 		},
 
-		resetGame : function(){
+		resetGame: function(){
 			game.pauseGame();
 			game.constructor($('#nbLines').val(), $('#nbColumns').val(), $('#nbBeings').val());	
 			game.drawCanvasUpd();
 		},
 
-		pauseGame : function(){
+		pauseGame: function(){
 			if (game.timerRunning){
 				clearInterval(game.intervalId);
 				game.timerRunning = false;	
 			}
 		},
 
-		drawBordersAndGrid : function(){
+		drawBordersAndGrid: function(){
 			this.context.fillStyle = "white";
 		    this.context.lineWidth = 4;
 		    this.context.strokeStyle="gray";
@@ -73,12 +73,12 @@ $(document).ready(function() {
  			} 			
  		},
 
-		drawCell : function(i, j){
+		drawCell: function(i, j){
  			(this.matrix[i][j] === 1) ? this.context.fillStyle = "black" : this.context.fillStyle = "white";
  			this.context.fillRect(i * this.cellWidth, j * this.cellHeight, this.cellWidth, this.cellHeight);
  		},	
 
-	 	drawCanvasUpd : function(){
+	 	drawCanvasUpd: function(){
 	 		this.context.fillStyle = "white";
 	 		for (var i = 0; i < this.nbColumns; i++){
  				for (var j = 0; j < this.nbLines; j++){
@@ -88,13 +88,13 @@ $(document).ready(function() {
  			this.drawBordersAndGrid();
  		},
 
- 		updStats : function(){
+ 		updStats: function(){
  			
  			$('#generationTxt').html("Generation : " + this.generation);
  			$('#nbBeingsTxt').html("Number of beings : " + this.getNumberOfBeings());
  		},
 
- 		getNumberOfBeings : function(){
+ 		getNumberOfBeings: function(){
  			var nbBeings = 0;
  			for (var i = 0; i < this.nbLines-1; i++) {
  				for (var j = 0; j < this.nbColumns-1; j++) {
@@ -104,7 +104,7 @@ $(document).ready(function() {
  			return nbBeings;
  		},
 
- 		getMatrixNext : function(){
+ 		getMatrixNext: function(){
  			var newMat = getMatrixZeros(this.nbLines, this.nbColumns);
  			for (var i = 0; i < this.nbLines; i++){ 				
  				for (var j = 0; j < this.nbColumns; j++){
@@ -117,11 +117,20 @@ $(document).ready(function() {
  			this.generation++;
  		},
 
- 		animate : function(){
+ 		animate: function(){
  			this.getMatrixNext();
  			this.drawCanvasUpd();	
  			this.updStats();
+ 		},
+
+ 		resizeCanvas: function(){
+ 			this.canvas.width = $('#divCanvas').width() * 0.9;
+ 			this.canvas.height = $(window).height() * 0.80;
+			//this.canvas.height = this.canvas.width;
+			this.cellWidth = this.canvas.width / this.nbColumns;
+	 		this.cellHeight = this.canvas.height / this.nbLines;
  		}
+
 	};
 
 	$("#playGame").on('click', function(){
@@ -137,10 +146,7 @@ $(document).ready(function() {
 	})
 
 	$(window).resize(function(){
-		game.canvas.width = $('#divCanvas').width() * 0.9;
-		game.canvas.height = game.canvas.width;
-		this.cellWidth = this.canvas.width / this.nbColumns;
- 		this.cellHeight = this.canvas.height / this.nbLines;
+		game.resizeCanvas();
 	})
 
 	$('input').on('keypress', function(e){
