@@ -32,27 +32,27 @@ $(document).ready(function() {
  			this.drawCanvasUpd();
  			this.updStats();
  			this.matrix = getMatrixRandom(this.matrix, nbLines, nbColumns, nbBeings);
-		}, 
+		},
 
 		playGame: function(){
-			if (!game.timerRunning){
-				game.intervalId = window.setInterval(function(){
+			if (!this.timerRunning){
+				this.intervalId = window.setInterval(function(){
 					game.animate();
-				}, TIME_LAPSE);	
-				game.timerRunning = true;
+				}, TIME_LAPSE);
+				this.timerRunning = true;
 			}
 		},
 
 		resetGame: function(){
-			game.pauseGame();
-			game.constructor($('#nbLines').val(), $('#nbColumns').val(), $('#nbBeings').val());	
-			game.drawCanvasUpd();
+			this.pauseGame();
+			this.constructor($('#nbLines').val(), $('#nbColumns').val(), $('#nbBeings').val());
+			this.drawCanvasUpd();
 		},
 
 		pauseGame: function(){
-			if (game.timerRunning){
-				clearInterval(game.intervalId);
-				game.timerRunning = false;	
+			if (this.timerRunning){
+				clearInterval(this.intervalId);
+				this.timerRunning = false;
 			}
 		},
 
@@ -70,26 +70,26 @@ $(document).ready(function() {
  				this.context.lineWidth = 1;
  				this.context.strokeStyle="lightgray";
  				this.context.strokeRect(0, i * this.cellHeight, this.canvas.width, i * this.cellHeight);
- 			} 			
+ 			}
  		},
 
 		drawCell: function(i, j){
  			(this.matrix[i][j] === 1) ? this.context.fillStyle = "black" : this.context.fillStyle = "white";
  			this.context.fillRect(i * this.cellWidth, j * this.cellHeight, this.cellWidth, this.cellHeight);
- 		},	
+ 		},
 
 	 	drawCanvasUpd: function(){
 	 		this.context.fillStyle = "white";
 	 		for (var i = 0; i < this.nbColumns; i++){
  				for (var j = 0; j < this.nbLines; j++){
- 					this.drawCell(i, j); 	
+ 					this.drawCell(i, j);
  				}
  			}
  			this.drawBordersAndGrid();
  		},
 
  		updStats: function(){
- 			
+
  			$('#generationTxt').html("Generation : " + this.generation);
  			$('#nbBeingsTxt').html("Number of beings : " + this.getNumberOfBeings());
  		},
@@ -106,7 +106,7 @@ $(document).ready(function() {
 
  		getMatrixNext: function(){
  			var newMat = getMatrixZeros(this.nbLines, this.nbColumns);
- 			for (var i = 0; i < this.nbLines; i++){ 				
+ 			for (var i = 0; i < this.nbLines; i++){
  				for (var j = 0; j < this.nbColumns; j++){
   					var neighboors = getNeighboorsNumber(this.matrix, i, j, this.nbLines, this.nbColumns);
  					if ((this.matrix[i][j] === 0) && (neighboors === 3)) newMat[i][j] = 1;
@@ -119,7 +119,7 @@ $(document).ready(function() {
 
  		animate: function(){
  			this.getMatrixNext();
- 			this.drawCanvasUpd();	
+ 			this.drawCanvasUpd();
  			this.updStats();
  		},
 
@@ -159,9 +159,9 @@ $(document).ready(function() {
 
 	$('#nbBeings').on('blur', function(e){
 		$(e.target).val(Math.min($('#nbLines').val() * $('#nbColumns').val(), $(e.target).val() ) )  ;
-		
+
 	})
-	
+
 	initPage();
 
 });
