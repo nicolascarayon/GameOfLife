@@ -38,21 +38,33 @@ $(document).ready(function() {
 			if (!this.timerRunning){
 				this.intervalId = window.setInterval(function(){
 					game.animate();
+<<<<<<< HEAD
 				}, TIME_LAPSE);
+=======
+				}, TIME_LAPSE);	
+>>>>>>> f1fab94520775ba2f726fcfa46c898f6b765e252
 				this.timerRunning = true;
 			}
 		},
 
 		resetGame: function(){
 			this.pauseGame();
+<<<<<<< HEAD
 			this.constructor($('#nbLines').val(), $('#nbColumns').val(), $('#nbBeings').val());
+=======
+			this.constructor($('#nbLines').val(), $('#nbColumns').val(), $('#nbBeings').val());	
+>>>>>>> f1fab94520775ba2f726fcfa46c898f6b765e252
 			this.drawCanvasUpd();
 		},
 
 		pauseGame: function(){
 			if (this.timerRunning){
 				clearInterval(this.intervalId);
+<<<<<<< HEAD
 				this.timerRunning = false;
+=======
+				this.timerRunning = false;	
+>>>>>>> f1fab94520775ba2f726fcfa46c898f6b765e252
 			}
 		},
 
